@@ -1,7 +1,7 @@
 $(function()
 {
-	var successMsg = "Your message has been sent."; // Message shown on success.
-	var failMsg = "Sorry it seems that our mail server is not responding, Sorry for the inconvenience!"; // Message shown on fail.
+	//var successMsg = "Your message has been sent."; // Message shown on success.
+	var failMsg = "Sorry it seems that our server is not responding, Sorry for the inconvenience!"; // Message shown on fail.
 	
 	$("input,textarea").jqBootstrapValidation(
     {
@@ -10,7 +10,7 @@ $(function()
 	 	{
 			event.preventDefault(); // prevent default submit behaviour
 			
-			var processorFile = "./includes/"+$form.attr('id')+".php";
+			var processorFile = "./includes/"+$form.attr('id')+".jsp";
 			var formData = {};
 
 			$form.find("input, textarea").each(function(e) // Loop over form objects build data object
@@ -29,7 +29,7 @@ $(function()
 			});
 	
 			$.ajax({
-		        url: processorFile,
+		        url: "./includes/"+$form.attr('id')+".jsp",
 		    	type: "POST",
 		    	data: formData,
 		    	cache: false,
@@ -37,19 +37,22 @@ $(function()
 		 		{  
 					$form.append("<div id='form-alert'><div class='alert alert-success'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>"+successMsg+"</strong></div></div>");		
 		 	   	},
-			   	error: function() // Fail
-			   	{
-					$form.append("<div id='form-alert'><div class='alert alert-danger'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>"+failMsg+"</strong></div></div>");	
-			   	},
-				complete: function() // Clear
-				{
-					$form.trigger("reset");
-				},
+
 		   	});
          },
-         filter: function() // Handle hidden form elements
-		 {
-			 return $(this).is(":visible");
-         },
+       
 	 });
+});
+
+
+
+data:{  
+    "date":date,  
+            "stuNo":stuNo  
+   },  
+   success:function(data){  
+           var params = "?date="+date+"&stuNo="+stuNo;  
+           var action = '../../page/studentInfo.jsp?'+params;  
+           dojo.byId("student").src = action;  
+  }  
 });

@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.sql.*"%>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -15,7 +16,7 @@
 		<script src="./js/bootstrap.js"></script>
 		<script src="./js/blocs.js"></script>
 		<script src="./js/jqBootstrapValidation.js"></script>
-		<!--  <script src="./js/formHandler.js"></script>-->
+		<script src="./js/formHandler.js"></script>
 		<title>Home</title>
 	</head>
 	<body>
@@ -96,16 +97,16 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-12">
-							<form id="movie_info_form" method="post" action="./movie_info.jsp">
+							<form id="movie_info_form" method="post" action="./includes/movie_info_form.jsp">
 								<div class="form-group">
 									<label id="movie-id-label" style="color:#ffffff;">Movie Id<br /></label>
-									<input id="movie_id_input" name="movieId" class="form-control" aria-invalid="false" />
+									<input id="movie_id_input" name="movieID" class="form-control" aria-invalid="false" />
 									<div class="help-block"></div>
 								</div>
 								<div class="form-group">
-									<label id="movie-title-label" style="color:#ffffff;">Movie Name 
+									<label id="movie-name-label" style="color:#ffffff;">Movie Name 
 									</label>
-									<input id="movie_title_input" name="movieTitle" class="form-control" aria-invalid="false" />
+									<input id="movie_name_input" name="title" class="form-control" aria-invalid="false" />
 									<div class="help-block"></div>
 								</div>
 								<button id="movie-submit" class="bloc-button btn btn-d btn-lg btn-block" type="submit">
@@ -123,20 +124,20 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-12">
-							<form id="actor_info_statistics_form" novalidate="">
+							<form id="actor_info_statistics_form" method="post" action="./includes/actor_info_statistics_form.jsp">
 								<div class="form-group">
 									<label id="actor-id-label">Actor Id<br /></label>
-									<input id="actor_id_input" class="form-control" />
+									<input id="actor_id_input" name="actorID" class="form-control" />
 									<div class="help-block"></div>
 								</div>
 								<div class="form-group">
-									<label id="actor-fname-label">First Name<br /></label>
-									<input id="actor_fname_input" class="form-control" />
+									<label id="fname-label">Actor First Name<br /></label>
+									<input id="fname_input" name="fname" class="form-control" />
 									<div class="help-block"></div>
 								</div>
 								<div class="form-group">
-									<label id="actor-lname-label">Last Name<br /></label>
-									<input id="actor_lname_input" class="form-control" />
+									<label id="lname-label">Actor Last Name<br /></label>
+									<input id="lname_input" name="lname" class="form-control" />
 									<div class="help-block"></div>
 								</div>
 								<button id="actor-submit" class="bloc-button btn btn-d btn-lg btn-block" type="submit">
@@ -153,20 +154,20 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-12">
-							<form id="genre_exploration_form" novalidate="">
+							<form id="genre_exploration_form" method="post" action="./includes/genre_exploration_form.jsp">
 								<div class="form-group">
 									<label id="exp-genre-label-label">Genre Label<br /></label>
-									<input id="exploration_genre_label_input" class="form-control" />
+									<input id="exploration_genre_label_input" name="genre" class="form-control" />
 									<div class="help-block"></div>
 								</div>
 								<div class="form-group">
 									<label id="exp-year-label">Year<br /></label>
-									<input id="exploration_year_input" class="form-control" />
+									<input id="exploration_year_input" name="year" class="form-control" />
 									<div class="help-block"></div>
 								</div>
 								<div class="form-group">
 									<label id="exp-endyear-label">End Year(optional)<br /></label>
-									<input id="exploration_endyear_input" class="form-control" />
+									<input id="exploration_endyear_input" name="end_year" class="form-control" />
 									<div class="help-block"></div>
 								</div>
 								<button id="exploration-submit" class="bloc-button btn btn-d btn-lg btn-block" type="submit">
@@ -183,15 +184,15 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-12">
-							<form id="genre_statistics_form" novalidate="">
+							<form id="genre_statistics_form" method="post" action="./includes/genre_statistics_form.jsp">
 								<div class="form-group">
 									<label id="sta-year-label">Year<br /></label>
-									<input id="genre_statistics_year_input" class="form-control" />
+									<input id="genre_statistics_year_input" name="year" class="form-control" />
 									<div class="help-block"></div>
 								</div>
 								<div class="form-group">
 									<label id="sta-endyear-label">End Year (optional)<br /></label>
-									<input id="genre_statistics_endyear_input" class="form-control" />
+									<input id="genre_statistics_endyear_input" name="end_year" class="form-control" />
 									<div class="help-block"></div>
 								</div>
 								<button id="statistics-submit" class="bloc-button btn btn-d btn-lg btn-block" type="submit">
@@ -274,140 +275,5 @@
 		<!-- Google Analytics END -->
 	</body>
 
-<div>
-	<form name="form1" action="">
-		movie ID:<input type="text" name="movieID" />
-    	title:   <input type="text" name="title" />
-    	
-    <input type = "submit" value = "submit"/>
-</form>
-</div>
-
-<div>
-	<form name="form2" action = "">
-		actor ID:<input type="text" name="actorID" />
-    	first name:<input type="text" name="first name" />
-    	last name:<input type="text" name="last name" />
-    	<input type = "submit" value = "submit"/>
-	</form>
-</div>
-
-<div>
-	<form name = "form3" action ="">
-		genres:<input type="text" name="genre" />
-    	year:<input type="text" name="year" />
-    	end year(optional):<input type="text" name="end year" />
-    	<input type = "submit" value = "submit"/>
-	</form>
-</div>
-
-<% 
-    String movie_ID = request.getParameter("movieID");
-    String title = request.getParameter("title");
-    String actorID = request.getParameter("actorID");
-    String fname = request.getParameter("first name");
-    String lname = request.getParameter("last name");
-    String genres = request.getParameter("genre");
-    String year = request.getParameter("year");
-    String end_year = request.getParameter("end year");
-%>
-
-<div>
-   movie ID: <%=movie_ID %>
-   title : <%=title %>
-   actor ID: <%=actorID %>
-   fname : <%=fname %>
-   lname:<%=lname %>
-   genres: <%=genres %>
-   year: = <%=year %>
-   end_year:<%=end_year %>
-</div>
-
-<%
-
-	try 
-	{
-		Class.forName( "org.postgresql.Driver" ).newInstance();
-		String url = "jdbc:postgresql://localhost:5432/postgres" ;
-		Connection con = DriverManager.getConnection(url, "postgres" , "1111" );
-		Statement st = con.createStatement();
-		String sql = "";
-		ResultSet rs =null;
-		//ResultSet rs = st.executeQuery(sql);
-		//Logger log = Logger.getLogger(this.getClass()); 
-		//log.info("starts to construct sql");
-		
-		//out.println("111111111");
-		
-		if(actorID!=null || fname!=null || lname!=null)
-		{
-			sql = "select * from actors where ";
-			if(actorID.length()!=0){
-				sql += "idactors='"+ actorID+"'";
-			}
-			if(fname.length()!=0){
-				if(sql.length()>27)
-					sql += " and ";
-				sql += "fname='"+fname+"'";	
-			}
-			if(lname.length()!=0){
-				if(sql.length()>27)
-					sql += " and ";
-				sql += "lname='"+lname+"'";	
-			}						
-			//out.println(sql);
-			rs = st.executeQuery(sql);
-			while (rs.next())
-			{
-			    out.println(rs.getInt( 1 ));
-			    out.println(rs.getString( 2 ));
-			    out.println(rs.getString( 3 ));
-			    out.println(rs.getString( 4 ));
-			} 
-		}
-		
-		if(genres!=null || year!=null || end_year!=null)
-		{
-			sql = "select * from genres,movies where ";
-			out.println(sql.length());
-			if(genres.length()!=0){
-				sql += "genre='"+genres+"'";
-			}			
-			if(year.length()!=0 && end_year.length()==0){
-				if(sql.length()>34)
-					sql += " and ";
-				sql += "year='"+year+"'";
-			}			
-			if(year.length()!=0 && end_year.length()!=0){
-				if(sql.length()>34)
-					sql += " and ";
-				sql += "year>='"+year+"' and ";
-				sql += "year<'"+end_year+"'";				
-			}
-			out.println(sql);
-			rs = st.executeQuery(sql);
-			while (rs.next())
-			{
-			    out.println(rs.getInt( 1 ));
-			    out.println(rs.getString( 2 ));
-			    out.println(rs.getString( 3 ));
-			    out.println(rs.getString( 4 ));
-			} 
-		}				
-		//while (rs.next())
-		//{
-		    //out.print(rs.getInt( 1 ));
-		    //out.println(rs.getString( 2 ));
-		//} 
-		//rs.close();
-		//st.close();
-		//con.close();
-		//out.println("2222222");
-	} 
-	catch (Exception ee)
-	{
-		System.out.print(ee.getMessage());
-	} 	
-%>
 </body>
 </html>
