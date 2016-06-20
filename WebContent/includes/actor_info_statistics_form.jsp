@@ -53,10 +53,13 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
+				<div class="panel">
+					<div class="panel-body">
+						<p>
 				<% 
-				    String movieID = request.getParameter("movieID");
-				    String title = request.getParameter("title");
-
+				    String actorID = request.getParameter("actorID");
+				    String fname = request.getParameter("fname");
+				    String lname = request.getParameter("lname");
 					try 
 					{
 						Class.forName( "org.postgresql.Driver" ).newInstance();
@@ -70,189 +73,122 @@
 						//log.info("starts to construct sql");
 						
 						//out.println("111111111");
-						if(movieID!=null||title!=null)
+						if(actorID !=null)
 						{														
-							if(movieID.length()!=0)
-							{
-								sql = "select idmovies,title,year from movies where ";
-								sql += " idmovies='"+ movieID+"'";
+							if(actorID.length()!=0)
+							{//SELECT fname, lname, gender, count(idmovies) FROM acted_in AS ai, actors AS a WHERE ai.idactors = a.idactors AND a.idactors = '2' GROUP BY fname, lname
+
+								sql = "SELECT fname, lname, gender, count(idmovies) FROM acted_in AS ai, actors AS a WHERE ai.idactors = a.idactors AND a.idactors = '";
+								sql += actorID+"' GROUP BY fname, lname, gender";
+								//out.println(sql);
 								rs = st.executeQuery(sql);
 								while (rs.next())
 								{
-								    int r_idmovies = rs.getInt( 1 );
-								    String r_title = rs.getString( 2 );
-								    int r_year = rs.getInt(3);
+									String r_fname = rs.getString( 1 );
+								    String r_lname = rs.getString( 2 );
+								    int r_gender = rs.getInt(3);
+								    int r_count =rs.getInt(4);
 								    /* out.println(rs.getString( 3 ));
 								    out.println(rs.getString( 4 )); */
-								    
-									%>
-									<div class="panel">
-										<div class="panel-body">
-											<p>
-												<b>Movie ID: </b><%=r_idmovies %><br>
-												<b>Movie Title: </b><%=r_title %><br>
-												<b>Year: </b><%=r_year %><br>
-												<b>Series: </b><%
-													String series_sql="SELECT name FROM series WHERE ";
-													series_sql += " idmovies='"+ r_idmovies +"'";
-													//out.println(series_sql);
-													Statement series_st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-													ResultSet series_rs = series_st.executeQuery(series_sql);
-													while(series_rs.next())
+								    %>
+								    <b>First Name: </b><%=r_fname %>
+									<b>Last Name: </b><%=r_lname %>
+									<b>Gender: </b><%=r_gender %>
+									<b>Movie Acted In: </b><%=r_count %><br>
+									<b>Movies: </b><% 
+									
+													String movie_sql="SELECT DISTINCT M.idmovies, M.title, M.year FROM acted_in AS ai, actors AS a, movies AS M WHERE ai.idactors = a.idactors AND M.idmovies = ai.idmovies AND a.idactors = '";
+													movie_sql += actorID+"'";
+													out.println(movie_sql);
+													Statement movie_st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+													ResultSet movie_rs = movie_st.executeQuery(movie_sql);
+													while(movie_rs.next())
 													{
-														String series_name=series_rs.getString(1);
+														int r_idmovies = movie_rs.getInt(1);
+														String r_title = movie_rs.getString(2);
+														int r_year = movie_rs.getInt(3);
 														%>
-														<%=series_name %>.
-														<%
 														
+														<div class="panel">
+															<div class="panel-body">
+																<p>
+																<b>Movie ID: </b><%=r_idmovies %><br>
+																<b>Movie Title: </b><%=r_title %><br>
+																<b>Movie Year: </b><%=r_year %><br>	
+																</p>
+															</div>
+														</div>	
+														<%														
 													}
-												%><br>
-												<b>Genres: </b><% 
-													String genre_sql="SELECT genre FROM movies_genres AS MG, genres AS G WHERE MG.idgenres = G.idgenres AND  ";
-													genre_sql += " idmovies='"+ r_idmovies +"'";
-													//out.println(series_sql);
-													Statement genre_st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-													ResultSet genre_rs = genre_st.executeQuery(genre_sql);
-													while(genre_rs.next())
-													{
-														String genre_name=genre_rs.getString(1);
-														%>
-														<%=genre_name %>.
-														<%
-														
-													}
-												%><br>
-												<b>Keywords: </b><% 
-													String keywords_sql="SELECT DISTINCT K.keyword FROM keywords AS K,movies_keywords AS MK WHERE K.idkeywords = MK.idkeywords AND ";
-													keywords_sql += " idmovies='"+ r_idmovies +"'";
-													//out.println(series_sql);
-													Statement keywords_st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-													ResultSet keywords_rs = genre_st.executeQuery(keywords_sql);
-													while(keywords_rs.next())
-													{
-														String keywords_name=keywords_rs.getString(1);
-														%>
-														<%=keywords_name %>. 
-														<%
-														
-													}
-												%><br>
-												<b>Actors: </b><% 
-													String actors_sql = "SELECT DISTINCT role,firstname,lastname FROM (SELECT character AS role, fname AS firstname, lname AS lastname FROM acted_in AS ai, actors AS a WHERE ai.idactors = a.idactors AND";
-													actors_sql +=" idmovies='"+ r_idmovies + "'" + "ORDER BY billing_position) AS list_actor";
-													Statement actors_st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-													ResultSet actors_rs = actors_st.executeQuery(actors_sql);
-													while(actors_rs.next())
-													{
-														String actors_role = actors_rs.getString(1);
-														String actors_firstname = actors_rs.getString(2);
-														String actors_lastname = actors_rs.getString(3);
-														String name = actors_firstname + '·' + actors_lastname;
-														%>
-														<%=name %>(<%=actors_role %>).
-																
-														<%													
-													}
-													%><br>
-											</p>
-										</div>
-									</div>								
-									<%
+												
+																	
+									
 								}
 							} 
-							else if(title.length()!=0)
+							else if(fname!=null || lname!=null)
 							{
-								sql = "select M.idmovies,M.title,M.year from movies AS M, aka_titles AS AKA_T where M.idmovies=AKA_T.idmovies AND AKA_T.title=";
-								sql += "'"+ title +"'";
-								rs = st.executeQuery(sql);
-								while (rs.next())
+								if(fname.length()!=0 && lname.length()!=0)
 								{
-								    int r_idmovies = rs.getInt( 1 );
-								    String r_title = rs.getString( 2 );
-								    int r_year = rs.getInt(3);
-								    /* out.println(rs.getString( 3 ));
-								    out.println(rs.getString( 4 )); */
-								    
-									%>
-									<div class="panel">
-										<div class="panel-body">
-											<p>
-												<b>Movie ID: </b><%=r_idmovies %><br>
-												<b>Movie Title: </b><%=r_title %><br>
-												<b>Year: </b><%=r_year %><br>
-												<b>Series: </b><%
-													String series_sql="SELECT name FROM series WHERE ";
-													series_sql += " idmovies='"+ r_idmovies +"'";
-													//out.println(series_sql);
-													Statement series_st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-													ResultSet series_rs = series_st.executeQuery(series_sql);
-													while(series_rs.next())
-													{
-														String series_name=series_rs.getString(1);
-														%>
-														<%=series_name %>.
-														<%
-														
-													}
-												%><br>
-												<b>Genres: </b><% 
-													String genre_sql="SELECT genre FROM movies_genres AS MG, genres AS G WHERE MG.idgenres = G.idgenres AND  ";
-													genre_sql += " idmovies='"+ r_idmovies +"'";
-													//out.println(series_sql);
-													Statement genre_st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-													ResultSet genre_rs = genre_st.executeQuery(genre_sql);
-													while(genre_rs.next())
-													{
-														String genre_name=genre_rs.getString(1);
-														%>
-														<%=genre_name %>.
-														<%
-														
-													}
-												%><br>
-												<b>Keywords: </b><% 
-													String keywords_sql="SELECT DISTINCT K.keyword FROM keywords AS K,movies_keywords AS MK WHERE K.idkeywords = MK.idkeywords AND ";
-													keywords_sql += " idmovies='"+ r_idmovies +"'";
-													//out.println(series_sql);
-													Statement keywords_st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-													ResultSet keywords_rs = genre_st.executeQuery(keywords_sql);
-													while(keywords_rs.next())
-													{
-														String keywords_name=keywords_rs.getString(1);
-														%>
-														<%=keywords_name %>. 
-														<%
-														
-													}
-												%><br>
-												<b>Actors: </b><% 
-													String actors_sql = "SELECT DISTINCT role,firstname,lastname FROM (SELECT character AS role, fname AS firstname, lname AS lastname FROM acted_in AS ai, actors AS a WHERE ai.idactors = a.idactors AND";
-													actors_sql +=" idmovies='"+ r_idmovies + "'" + "ORDER BY billing_position) AS list_actor";
-													Statement actors_st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-													ResultSet actors_rs = actors_st.executeQuery(actors_sql);
-													while(actors_rs.next())
-													{
-														String actors_role = actors_rs.getString(1);
-														String actors_firstname = actors_rs.getString(2);
-														String actors_lastname = actors_rs.getString(3);
-														String name = actors_firstname + '·' + actors_lastname;
-														%>
-														<%=name %>(<%=actors_role %>).
-																
-														<%													
-													}
-													%><br>
-											</p>
-										</div>
-									</div>								
-									<%
+									sql = "SELECT fname, lname, gender, count(idmovies), a.idactors FROM acted_in AS ai, actors AS a WHERE ai.idactors = a.idactors AND a.fname = '";
+									sql += fname+"' AND a.lname='" + lname  + "' GROUP BY fname, lname, gender, a.idactors";
+									//out.println(sql);
+								}
+								else if(fname.length()!=0 && lname.length()==0)
+								{
+									sql = "SELECT fname, lname, gender, count(idmovies), a.idactors FROM acted_in AS ai, actors AS a WHERE ai.idactors = a.idactors AND a.fname = '";
+									sql += fname+"' GROUP BY fname, lname, gender, a.idactors";
+									//out.println(sql);
+								}
+								else if(fname.length()==0 && lname.length()!=0) 
+								{
+									sql = "SELECT fname, lname, gender, count(idmovies), a.idactors FROM acted_in AS ai, actors AS a WHERE ai.idactors = a.idactors AND a.lname = '";
+									sql += lname  + "' GROUP BY fname, lname, gender, a.idactors";
+									//out.println(sql);
+								}
 								
+								//out.println(sql);
+								rs = st.executeQuery(sql);
+								while (rs.next())
+								{
+									String r_fname = rs.getString( 1 );
+								    String r_lname = rs.getString( 2 );
+								    int r_gender = rs.getInt(3);
+								    int r_count =rs.getInt(4);
+								    actorID = rs.getString(5);
+								    /* out.println(rs.getString( 3 ));
+								    out.println(rs.getString( 4 )); */
+								    %>
+								    <b>First Name: </b><%=r_fname %>
+									<b>Last Name: </b><%=r_lname %>
+									<b>Gender: </b><%=r_gender %>
+									<b>Movie Acted In: </b><%=r_count %><br>
+									<b>Movies: </b><% 
+									
+													String movie_sql="SELECT DISTINCT M.idmovies, M.title, M.year FROM acted_in AS ai, actors AS a, movies AS M WHERE ai.idactors = a.idactors AND M.idmovies = ai.idmovies AND a.idactors = '";
+													movie_sql += actorID+"'";
+													//out.println(movie_sql);
+													Statement movie_st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+													ResultSet movie_rs = movie_st.executeQuery(movie_sql);
+													while(movie_rs.next())
+													{
+														int r_idmovies = movie_rs.getInt(1);
+														String r_title = movie_rs.getString(2);
+														int r_year = movie_rs.getInt(3);
+														%>
+														
+														<div class="panel">
+															<div class="panel-body">
+																<p>
+																<b>Movie ID: </b><%=r_idmovies %><br>
+																<b>Movie Title: </b><%=r_title %><br>
+																<b>Movie Year: </b><%=r_year %><br>	
+																</p>
+															</div>
+														</div>	
+														<%														
+													}																										
 								}
-
 							} 
-							
-
-							//out.println(sql);
 
 						}
 					}					
@@ -262,6 +198,8 @@
 					} 	
 				%>
 
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
