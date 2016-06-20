@@ -7,16 +7,19 @@
 		<meta name="keywords" content="" />
 		<meta name="description" content="" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
-		<link rel="stylesheet" href="./css/bootstrap.css" type="text/css" />
-		<link rel="stylesheet" href="style.css" type="text/css" />
-		<link rel="stylesheet" href="./css/animate.css" />
-		<link rel="stylesheet" href="./css/font-awesome.min.css" />
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Josefin+Sans&subset=latin,latin-ext" type="text/css" />
-		<script src="./js/jquery-2.1.0.js"></script>
-		<script src="./js/bootstrap.js"></script>
-		<script src="./js/blocs.js"></script>
-		<script src="./js/jqBootstrapValidation.js"></script>
-		<script src="./js/formHandler.js"></script>
+		
+			<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+			<link rel="stylesheet" type="text/css" href="style.css">
+			<link rel="stylesheet" href="css/animate.min.css" />
+			<link rel='stylesheet' href='css/font-awesome.min.css'/>
+			<link href='http://fonts.googleapis.com/css?family=Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+		    
+			<script src="js/jquery-2.1.0.min.js"></script>
+			<script src="js/bootstrap.min.js"></script>
+			<script src="js/blocs.js"></script>
+			<script src="js/jqBootstrapValidation.js"></script>
+
+		<!-- <script src="./js/formHandler.js"></script> -->
 		<title>Home</title>
 	</head>
 	<body>
